@@ -66,6 +66,9 @@ void Robot::initRobot() {
 		std::cout << "Communication with " << MechID << " failed.\n\n";
 		return;
 	}
+	else {
+		std::cout << "Receiving initial EGM msg from " << MechID << " on " << port << ".\n\t";
+	}
 	abb::egm::EgmRobot* initRobMessage = new abb::egm::EgmRobot();
 	initRobMessage->ParseFromArray(ProtoMessage, n);
 	// Store the initial joint and cartesian values in the class members
@@ -75,12 +78,17 @@ void Robot::initRobot() {
 	nextRobotEuler[0] = RobotEuler[0] = initRobotEuler[0] = initRobMessage->feedback().cartesian().euler().x();
 	nextRobotEuler[1] = RobotEuler[1] = initRobotEuler[1] = initRobMessage->feedback().cartesian().euler().y();
 	nextRobotEuler[2] = RobotEuler[2] = initRobotEuler[2] = initRobMessage->feedback().cartesian().euler().z();
+	std::cout << MechID << " Initial Pose: [ (" << nextRobotPos[0] << ", " << nextRobotPos[1] << ", " <<
+		nextRobotPos[2] << "), (" << nextRobotEuler[0] << ", " << nextRobotEuler[1] << ", " <<
+		nextRobotEuler[2] << ") ]" << std::endl;
 	nextRobotJoint[0] = RobotJoint[0] = initRobotJoint[0] = initRobMessage->feedback().joints().joints(0);
 	nextRobotJoint[1] = RobotJoint[1] = initRobotJoint[1] = initRobMessage->feedback().joints().joints(1);
 	nextRobotJoint[2] = RobotJoint[2] = initRobotJoint[2] = initRobMessage->feedback().joints().joints(2);
 	nextRobotJoint[3] = RobotJoint[3] = initRobotJoint[3] = initRobMessage->feedback().joints().joints(3);
 	nextRobotJoint[4] = RobotJoint[4] = initRobotJoint[4] = initRobMessage->feedback().joints().joints(4);
 	nextRobotJoint[5] = RobotJoint[5] = initRobotJoint[5] = initRobMessage->feedback().joints().joints(5);
+	std::cout << MechID << " Initial Joint Positions: [ " << nextRobotJoint[0] << ", " << nextRobotJoint[1] << ", " <<
+		nextRobotJoint[2] << ", " << nextRobotJoint[3] << ", " << nextRobotJoint[4] << ", " << nextRobotJoint[5] << " ]\n";
 	delete initRobMessage;
 	log.open(MechID.append(" - log.txt"), std::ios::trunc);
 }
